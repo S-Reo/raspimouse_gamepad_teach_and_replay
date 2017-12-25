@@ -9,16 +9,19 @@ from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 from raspimouse_ros_2.msg import LightSensorValues, ButtonValues
 from raspimouse_gamepad_teach_and_replay.msg import Event
+from sensor_msgs.msg import LaserScan
 
 class Logger():
     def __init__(self):
-        self.sensor_values = LightSensorValues()
+        self.sensor_values = LaserScan()
         self.cmd_vel = Twist()
 
         self._decision = rospy.Publisher('/event',Event,queue_size=100)
 	rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
-        rospy.Subscriber('/lightsensors', LightSensorValues, self.sensor_callback)
+#        rospy.Subscriber('/lightsensors', LightSensorValues, self.sensor_callback)
         rospy.Subscriber('/cmd_vel', Twist, self.cmdvel_callback)
+        rospy.Subscriber('/scan', LaserScan, self.sensor_callback)
+
 
 	self.on = False
 	self.bag_open = False
@@ -49,12 +52,19 @@ class Logger():
 	a = self.cmd_vel
 	e = Event()
 
-        e.left_side = s.left_side
-        e.right_side = s.right_side
-        e.left_forward = s.left_forward
-        e.right_forward = s.right_forward
+	lf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+	rf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+	ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
+        rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
+
+        e.left_side = 500.0 if math.isnan(s.ranges[ls]) else s.ranges[ls]*1000;
+        e.right_side = 500.0  if math.isnan(s.ranges[rs]) else s.ranges[rs]*1000;
+        e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else s.ranges[lf]*1000;
+        e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else s.ranges[rf]*1000;
         e.linear_x = a.linear.x
         e.angular_z = a.angular.z
+
+        print(e)
 
         self._decision.publish(e)
 	self.bag.write('/event', e)

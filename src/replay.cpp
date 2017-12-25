@@ -13,6 +13,7 @@
 #include "raspimouse_ros_2/LightSensorValues.h"
 #include "raspimouse_ros_2/TimedMotion.h"
 #include "raspimouse_ros_2/ButtonValues.h"
+#include "sensor_msgs/LaserScan.h"
 #include "raspimouse_gamepad_teach_and_replay/Event.h"
 #include "ParticleFilter.h"
 #include "raspimouse_gamepad_teach_and_replay/PFoEOutput.h"
@@ -29,15 +30,26 @@ int sum_forward = 0;
 bool on = false;
 bool bag_read = false;
 
+const double pi = 3.141592;
+
 void buttonCallback(const raspimouse_ros_2::ButtonValues::ConstPtr& msg)
 {
 	on = msg->mid_toggle;
 }
 
-void sensorCallback(const raspimouse_ros_2::LightSensorValues::ConstPtr& msg)
+void sensorCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-	sensor_values.setValues(msg->left_forward,msg->left_side,msg->right_side,msg->right_forward);
-	sum_forward = msg->sum_forward;
+	int lf = (-pi*3.0/180 - msg->angle_min)/msg->angle_increment; 
+	int rf = (pi*3.0/180 - msg->angle_min)/msg->angle_increment; 
+	int ls = (-pi*45.0/180 - msg->angle_min)/msg->angle_increment; 
+	int rs = (pi*45.0/180 - msg->angle_min)/msg->angle_increment; 
+
+	double lfv = isnan(msg->ranges[lf]) ? 500.0 : msg->ranges[lf]*1000;
+	double rfv = isnan(msg->ranges[rf]) ? 500.0 : msg->ranges[rf]*1000;
+	double rsv = isnan(msg->ranges[rs]) ? 500.0 : msg->ranges[rs]*1000;
+	double lsv = isnan(msg->ranges[ls]) ? 500.0 : msg->ranges[ls]*1000;
+
+	sensor_values.setValues(lfv,lsv,rsv,rfv);
 }
 
 void on_shutdown(int sig)
@@ -86,7 +98,8 @@ int main(int argc, char **argv)
 	NodeHandle n;
 	np = &n;
 
-	Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
+	//Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
+	Subscriber sub = n.subscribe("/scan", 1, sensorCallback);
 	Subscriber sub_b = n.subscribe("buttons", 1, buttonCallback);
 	Publisher cmdvel = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 	Publisher pfoe_out = n.advertise<raspimouse_gamepad_teach_and_replay::PFoEOutput>("pfoe_out", 100);
