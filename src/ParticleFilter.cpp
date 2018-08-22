@@ -27,6 +27,7 @@ void ParticleFilter::init(void)
 
 void ParticleFilter::print(void)
 {
+	/*
 	int i = 0;
 	for(auto &p : particles){
 		if(p.pos >= 0){
@@ -37,6 +38,7 @@ void ParticleFilter::print(void)
 		if(i==10)
 			return;
 	}
+	*/
 }
 
 Action ParticleFilter::modeParticle(Episodes *ep)
@@ -44,7 +46,7 @@ Action ParticleFilter::modeParticle(Episodes *ep)
 	double fw = 0.0;
 	double rot = 0.0;
 	double max = 0.0;
-	cout << "mode particle" << endl;
+	//cout << "mode particle" << endl;
 	for(auto &p : particles){
 		auto e = ep->actionAt(p.pos);
 		if(max < p.weight){
@@ -61,6 +63,10 @@ Action ParticleFilter::modeParticle(Episodes *ep)
 
 Action ParticleFilter::mode(Episodes *ep)
 {
+	struct timespec tt;
+	clock_gettime(CLOCK_REALTIME, &tt);
+	cout << "mode_start:" << tt.tv_sec << '.' << tt.tv_nsec << '\t';
+
 	for(auto &p : particles){
 		auto e = ep->At(p.pos);
 		e->counter = 0;
@@ -83,6 +89,9 @@ Action ParticleFilter::mode(Episodes *ep)
 	Action a;
 	a.linear_x = mode_a->linear_x;
 	a.angular_z = mode_a->angular_z;
+
+	clock_gettime(CLOCK_REALTIME, &tt);
+	cout << "mode_end:" << tt.tv_sec << '.' << tt.tv_nsec << endl;
 	return a;
 }
 
@@ -90,7 +99,7 @@ Action ParticleFilter::average(Episodes *ep)
 {
 	double fw = 0.0;
 	double rot = 0.0;
-	cout << "avg" << endl;
+	//cout << "avg" << endl;
 	for(auto &p : particles){
 		auto e = ep->actionAt(p.pos+1);
 		fw += p.weight * e->linear_x;
@@ -104,8 +113,12 @@ Action ParticleFilter::average(Episodes *ep)
 
 Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep, raspimouse_gamepad_teach_and_replay::PFoEOutput *out)
 {
+	struct timespec tt;
+	clock_gettime(CLOCK_REALTIME, &tt);
+	cout << "su_start:" << tt.tv_sec << '.' << tt.tv_nsec << '\t';
+
 	out->eta = 0.0;
-	cout << "obs likelihood" << endl;
+	//cout << "obs likelihood" << endl;
 	for(auto &p : particles){
 		double h = likelihood(episodes->obsAt(p.pos),obs);
 		//double h = likelihood(episodes->obsAt(p.pos),obs, episodes->actionAt(p.pos), act);
@@ -127,18 +140,22 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 */
 
 	normalize();
+
+	clock_gettime(CLOCK_REALTIME, &tt);
+	cout << "resampling_start:" << tt.tv_sec << '.' << tt.tv_nsec << '\t';
 	resampling(&particles);
 	
 	//cout << "OUTPUT " << fw << " " << rot << endl;
 
+	/*
 	for(auto &p : particles){
 		out->particles_pos.push_back(p.pos);
-	}
+	}*/
 
-	cout << "mode" << endl;
+	//cout << "mode" << endl;
 	return mode(ep);
-//	cout << "avg" << endl;
-//	return average(ep);
+	//cout << "avg" << endl;
+	//return average(ep);
 }
 
 double ParticleFilter::likelihood(Observation *past, Observation *last)
@@ -236,7 +253,7 @@ void ParticleFilter::normalize(void)
 	for(auto &p : particles)
 		eta += p.weight;
 
-	cout << "eta: " << eta << endl;
+	//cout << "eta: " << eta << endl;
 	for(auto &p : particles)
 		p.weight /= eta;
 }
@@ -247,7 +264,7 @@ void ParticleFilter::motionUpdate(Episodes *ep)
 	cout << "no odom" << endl;
 	init();
 */
-	cout << "odom" << endl;
+	//cout << "odom" << endl;
 	for(auto &p : particles){
 		if(rand() % 10 == 0){
 			p.pos = prob.uniformRandInt(0,episodes->data.size()-2);

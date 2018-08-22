@@ -16,6 +16,7 @@
 #include "raspimouse_gamepad_teach_and_replay/Event.h"
 #include "ParticleFilter.h"
 #include "raspimouse_gamepad_teach_and_replay/PFoEOutput.h"
+#include <time.h>
 using namespace ros;
 
 Episodes ep;
@@ -120,8 +121,11 @@ int main(int argc, char **argv)
 			loop_rate.sleep();
 			continue;
 		}
+
 		raspimouse_gamepad_teach_and_replay::PFoEOutput out;
 
+//		clock_gettime(CLOCK_REALTIME, &tt);
+//		cout << tt.tv_sec << '.' << tt.tv_nsec << '\t';
 		act = pf.sensorUpdate(&sensor_values, &act, &ep, &out);
 		msg.linear.x = act.linear_x;
 		out.linear_x = act.linear_x;
@@ -134,7 +138,7 @@ int main(int argc, char **argv)
 		out.right_side = sensor_values.rs;
 
 		cmdvel.publish(msg);
-		pfoe_out.publish(out);
+		//pfoe_out.publish(out);
 		pf.motionUpdate(&ep);
 
 		spinOnce();
