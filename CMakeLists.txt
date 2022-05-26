@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  raspimouse_ros_2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -109,7 +110,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES raspimouse_gamepad_teach_and_replay
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs raspimouse_ros_2
 #  DEPENDS system_lib
 )
 

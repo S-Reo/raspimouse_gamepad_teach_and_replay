@@ -4,7 +4,10 @@
 #include "Observation.h"
 #include "Episodes.h"
 using namespace std;
+#include <iostream>
+#include <string>    // useful for reading and writing
 
+#include <fstream>   // ifstream, ofstream
 ParticleFilter::ParticleFilter(int num, Episodes *ep)
 {
 	double w = 1.0/num;
@@ -70,15 +73,23 @@ Action ParticleFilter::mode(Episodes *ep)
 		e->counter++;
 	}
 	int max = 0;
+	int mode_pos=0;
 	Action *mode_a;
 	for(auto &p : particles){
 		auto e = ep->At(p.pos);
 		if(e->counter > max){
 			max = e->counter;
 			mode_a = ep->actionAt(p.pos+1);
+			mode_pos = p.pos+1;
 		}
 		e->counter = 0;
 	}
+	//ep->evTime(mode_pos);
+	string filename = "/home/ubuntu/catkin_ws/src/raspimouse_gamepad_teach_and_replay/src/evtime_log.txt";
+	ofstream writing_file;
+	writing_file.open(filename, ios::app);//out
+	writing_file << ep->data[mode_pos].time << endl;
+	writing_file.close();
 
 	Action a;
 	a.linear_x = mode_a->linear_x;

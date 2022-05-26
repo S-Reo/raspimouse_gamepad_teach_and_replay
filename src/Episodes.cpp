@@ -2,6 +2,9 @@
 #include <iostream>
 using namespace std;
 
+#include <string>    // useful for reading and writing
+#include <fstream>   // ifstream, ofstream
+
 Episodes::Episodes()
 {
 	reset();
@@ -69,4 +72,12 @@ Action *Episodes::actionAt(int pos)
 		return NULL;
 	}
 	return &(data[pos].action);
+}
+void Episodes::evTime(int pos)
+{
+	std::string filename = "evtime_log.txt";
+	std::ofstream writing_file;
+	writing_file.open(filename, std::ios::out);
+	writing_file << "1" << std::endl;
+	//data[pos].time
 }

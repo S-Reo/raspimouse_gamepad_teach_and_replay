@@ -16,6 +16,9 @@
 #include "raspimouse_gamepad_teach_and_replay/Event.h"
 #include "ParticleFilter.h"
 #include "raspimouse_gamepad_teach_and_replay/PFoEOutput.h"
+
+#include <string>    // useful for reading and writing
+
 using namespace ros;
 
 Episodes ep;
@@ -28,6 +31,7 @@ int sum_forward = 0;
 
 bool on = false;
 bool bag_read = false;
+
 
 void buttonCallback(const raspimouse_ros_2::ButtonValues::ConstPtr& msg)
 {
@@ -82,6 +86,16 @@ void readEpisodes(string file)
 
 int main(int argc, char **argv)
 {
+	
+	/*ROS_ERROR("unko");
+	string filename = "/home/ubuntu/evtime_log.txt";
+                        ofstream writing_file;
+                        writing_file.open(filename, ios::app);
+                        string writing_text = "OK";
+                        writing_file << writing_text << endl;
+                        cout << writing_text << endl;
+                        writing_file.close();
+*/
 	init(argc,argv,"go_around");
 	NodeHandle n;
 	np = &n;
@@ -103,9 +117,11 @@ int main(int argc, char **argv)
 	//pf.init();
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
+
 	while(ok()){
 		if(not on){
 			cout << "idle" << endl;
+    			
 			bag_read = false;
 			spinOnce();
 			loop_rate.sleep();
@@ -137,6 +153,7 @@ int main(int argc, char **argv)
 		pfoe_out.publish(out);
 		pf.motionUpdate(&ep);
 
+		
 		spinOnce();
 		loop_rate.sleep();
 	}
