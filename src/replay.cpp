@@ -87,15 +87,6 @@ void readEpisodes(string file)
 int main(int argc, char **argv)
 {
 	
-	/*ROS_ERROR("unko");
-	string filename = "/home/ubuntu/evtime_log.txt";
-                        ofstream writing_file;
-                        writing_file.open(filename, ios::app);
-                        string writing_text = "OK";
-                        writing_file << writing_text << endl;
-                        cout << writing_text << endl;
-                        writing_file.close();
-*/
 	init(argc,argv,"go_around");
 	NodeHandle n;
 	np = &n;

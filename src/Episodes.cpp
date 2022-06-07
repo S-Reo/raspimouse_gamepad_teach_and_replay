@@ -78,6 +78,5 @@ void Episodes::evTime(int pos)
 	std::string filename = "evtime_log.txt";
 	std::ofstream writing_file;
 	writing_file.open(filename, std::ios::out);
-	writing_file << "1" << std::endl;
 	//data[pos].time
 }

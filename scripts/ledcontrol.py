@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2017 Ryo Okazaki
 # Copyright 2017 Ryuichi Ueda
 # Released under the BSD License.
