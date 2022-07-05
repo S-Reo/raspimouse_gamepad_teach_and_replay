@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright 2017 Masahiro Kato
 # Copyright 2017 Ryuichi Ueda
 # Released under the BSD License.
@@ -17,14 +17,13 @@ class Logger():
         self.cmd_vel = Twist()
 
         self._decision = rospy.Publisher('/event',Event,queue_size=100)
-	rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
+        rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
 #        rospy.Subscriber('/lightsensors', LightSensorValues, self.sensor_callback)
         rospy.Subscriber('/cmd_vel', Twist, self.cmdvel_callback)
         rospy.Subscriber('/scan', LaserScan, self.sensor_callback)
 
-
-	self.on = False
-	self.bag_open = False
+        self.on = False
+        self.bag_open = False
 
     def button_callback(self,msg):
         self.on = msg.front_toggle
@@ -36,38 +35,38 @@ class Logger():
         self.cmd_vel = messages
 
     def output_decision(self):
-	if not self.on:
-	    if self.bag_open:
-		self.bag.close()
-		self.bag_open = False
-	    return
-	else:
-	    if not self.bag_open:
-		filename = datetime.datetime.today().strftime("%Y%m%d_%H%M%S") + '.bag'
-		rosparam.set_param("/current_bag_file", filename)
-		self.bag = rosbag.Bag(filename, 'w')
-		self.bag_open = True
+      if not self.on:
+            if self.bag_open:
+                self.bag.close()
+                self.bag_open = False
+            return
+      else :
+          if not self.bag_open:
+              filename = datetime.datetime.today().strftime("%Y%m%d_%H%M%S") + '.bag'
+              rosparam.set_param("/current_bag_file", filename)
+              self.bag = rosbag.Bag(filename, 'w')
+              self.bag_open = True
 
-	s = self.sensor_values
-	a = self.cmd_vel
-	e = Event()
+      s = self.sensor_values
+      a = self.cmd_vel
+      e = Event()
 
-	lf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
-	rf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
-	ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
-        rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
+      lf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+      rf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+      ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
+      rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment);
 
-        e.left_side = 500.0 if math.isnan(s.ranges[ls]) else s.ranges[ls]*1000;
-        e.right_side = 500.0  if math.isnan(s.ranges[rs]) else s.ranges[rs]*1000;
-        e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else s.ranges[lf]*1000;
-        e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else s.ranges[rf]*1000;
-        e.linear_x = a.linear.x
-        e.angular_z = a.angular.z
+      e.left_side = 500.0 if math.isnan(s.ranges[ls]) else s.ranges[ls]*1000;
+      e.right_side = 500.0  if math.isnan(s.ranges[rs]) else s.ranges[rs]*1000;
+      e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else s.ranges[lf]*1000;
+      e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else s.ranges[rf]*1000;
+      e.linear_x = a.linear.x
+      e.angular_z = a.angular.z
 
-        print(e)
+      print(e)
 
-        self._decision.publish(e)
-	self.bag.write('/event', e)
+      self._decision.publish(e)
+      self.bag.write('/event', e)
 
     def run(self):
         rate = rospy.Rate(10)
