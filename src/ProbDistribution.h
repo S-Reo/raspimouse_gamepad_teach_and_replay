@@ -2,6 +2,7 @@
 #define __PROB_DISTRIBUTIONS
 
 #include <random>
+#include <iostream>
 using namespace std;
 
 class ProbDistributions
@@ -33,8 +34,10 @@ public:
 
 	int uniformRandInt(int min,int max)
 	{
+		cout << "c" << endl;
 		uniform_int_distribution<> ud(min,max);
-		return ud(*gen);
+		cout << "d" << endl;
+		return 2;//ud(*gen);
 	}
 
 private:

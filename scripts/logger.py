@@ -56,10 +56,10 @@ class Logger():
       ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
       rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment);
 
-      e.left_side = 500.0 if math.isnan(s.ranges[ls]) else int(s.ranges[ls]*1000);
-      e.right_side = 500.0  if math.isnan(s.ranges[rs]) else int(s.ranges[rs]*1000);
-      e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else int(s.ranges[lf]*1000);
-      e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else int(s.ranges[rf]*1000);
+      e.left_side = 500.0 if math.isnan(s.ranges[ls]) else s.ranges[ls]*1000;
+      e.right_side = 500.0  if math.isnan(s.ranges[rs]) else s.ranges[rs]*1000;
+      e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else s.ranges[lf]*1000;
+      e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else s.ranges[rf]*1000;
       e.linear_x = int(a.linear.x)
       e.angular_z = int(a.angular.z)
       
