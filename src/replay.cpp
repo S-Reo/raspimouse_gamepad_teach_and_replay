@@ -94,10 +94,12 @@ void readEpisodes(string file)
 
 int main(int argc, char **argv)
 {
+	cout << "1" << endl;
 	init(argc,argv,"go_around");
 	NodeHandle n;
 	np = &n;
 
+	cout << "2" << endl;
 	//Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
 	Subscriber sub = n.subscribe("/scan", 1, sensorCallback);
 	Subscriber sub_b = n.subscribe("buttons", 1, buttonCallback);
@@ -105,15 +107,20 @@ int main(int argc, char **argv)
 	Publisher pfoe_out = n.advertise<raspimouse_gamepad_teach_and_replay::PFoEOutput>("pfoe_out", 100);
 	ros::ServiceClient motor_on = n.serviceClient<std_srvs::Trigger>("motor_on");
 	ros::ServiceClient tm = n.serviceClient<raspimouse_ros_2::TimedMotion>("timed_motion");
+	cout << "3" << endl;
 
 	signal(SIGINT, on_shutdown);
+	cout << "4" << endl;
 
 	motor_on.waitForExistence();
 	std_srvs::Trigger t;
 	motor_on.call(t);
+	cout << "5" << endl;
 
 	geometry_msgs::Twist msg;
+	cout << "6" << endl;
 	pf.init();
+  cout << "7" << endl;
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
 	while(ok()){
