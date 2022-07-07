@@ -117,6 +117,7 @@ int main(int argc, char **argv)
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
 	while(ok()){
+		//cout << "wowow" << endl;
 		if(not on){
 			cout << "idle" << endl;
 			bag_read = false;
@@ -124,6 +125,7 @@ int main(int argc, char **argv)
 			loop_rate.sleep();
 			continue;
 		}else if(not bag_read){
+			cout << "not bag_read" << endl;
 			string bagfile;
 			n.getParam("/current_bag_file", bagfile);
 			readEpisodes(bagfile);
@@ -134,6 +136,8 @@ int main(int argc, char **argv)
 			continue;
 		}
 		raspimouse_gamepad_teach_and_replay::PFoEOutput out;
+		
+		cout << "1" << endl;
 
 		act = pf.sensorUpdate(&sensor_values, &act, &ep, &out);
 		msg.linear.x = act.linear_x;
@@ -141,11 +145,12 @@ int main(int argc, char **argv)
 		msg.angular.z = act.angular_z;
 		out.angular_z = act.angular_z;
 
+		cout << "2" << endl;
 		out.left_forward = sensor_values.lf;
 		out.left_side = sensor_values.ls;
 		out.right_forward = sensor_values.rf;
 		out.right_side = sensor_values.rs;
-
+		
 		cmdvel.publish(msg);
 		pfoe_out.publish(out);
 		pf.motionUpdate(&ep);
