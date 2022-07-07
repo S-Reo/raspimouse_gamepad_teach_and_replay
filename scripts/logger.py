@@ -63,7 +63,7 @@ class Logger():
       e.linear_x = a.linear.x
       e.angular_z = a.angular.z
 
-      print(e)
+#      print(e)
 
       self._decision.publish(e)
       self.bag.write('/event', e)
