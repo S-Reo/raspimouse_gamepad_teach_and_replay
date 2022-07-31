@@ -13,8 +13,8 @@ class LedControl(object):
 
     def button_callback(self, btn_msg):
         leds = LedValues()
-        leds.left_side = btn_msg.front_toggle
-        leds.left_forward = btn_msg.mid_toggle
+        leds.left_side = bool(btn_msg.front_toggle)
+        leds.left_forward = bool(btn_msg.mid_toggle)
         self._led_pub.publish(leds)
 
 if __name__ == '__main__':

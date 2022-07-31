@@ -51,23 +51,29 @@ class Logger():
       a = self.cmd_vel
       e = Event()
 
+      print(s.angle_increment)
+
       lf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
       rf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
       ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
       rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment);
 
-      e.left_side = 500.0 if math.isnan(s.ranges[ls]) else s.ranges[ls]*1000;
-      e.right_side = 500.0  if math.isnan(s.ranges[rs]) else s.ranges[rs]*1000;
-      e.left_forward = 500.0 if math.isnan(s.ranges[lf]) else s.ranges[lf]*1000;
-      e.right_forward = 500.0 if math.isnan(s.ranges[rf]) else s.ranges[rf]*1000;
-      e.linear_x = int(a.linear.x)
-      e.angular_z = int(a.angular.z)
-      
+
+
+      e.left_side = int(500.0) if math.isnan(s.ranges[ls]) else int(s.ranges[ls]*1000);
+      e.right_side = int(500.0)  if math.isnan(s.ranges[rs]) else int(s.ranges[rs]*1000);
+      e.left_forward = int(500.0) if math.isnan(s.ranges[lf]) else int(s.ranges[lf]*1000);
+      e.right_forward = int(500.0) if math.isnan(s.ranges[rf]) else int(s.ranges[rf]*1000);
+      e.linear_x = a.linear.x
+      e.angular_z = a.angular.z
+     
       
       print(e)
 
       self._decision.publish(e)
       self.bag.write('/event', e)
+
+      
 
     def run(self):
         rate = rospy.Rate(10)
