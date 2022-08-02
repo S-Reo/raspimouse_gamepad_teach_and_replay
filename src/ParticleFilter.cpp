@@ -22,8 +22,9 @@ void ParticleFilter::init(void)
 	double w = 1.0/particles.size();
 	cout << "init 2" << endl;
 	for(auto &p : particles){
-	cout << "init 3" << endl;
-		p.pos = prob.uniformRandInt(0,episodes->data.size()-2);
+		cout << "init 3" << endl;
+		cout << episodes->data.size()-2 << endl;
+		p.pos = prob.uniformRandInt(0,episodes->data.size()-2); //パーティクルをランダムに配置
 	cout << "init 4" << endl;
 		p.weight = w;
 	cout << "init 5" << endl;

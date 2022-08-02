@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 
 	geometry_msgs::Twist msg;
 	cout << "6" << endl;
-	pf.init();
+	//pf.init();
   cout << "7" << endl;
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};

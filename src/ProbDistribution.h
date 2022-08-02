@@ -34,8 +34,9 @@ public:
 
 	int uniformRandInt(int min,int max)
 	{
+		
 		uniform_int_distribution<> ud(min,max);
-		cout << ud(*gen) << endl;
+		cout << "あ" << ud(*gen) << endl;
 		return ud(*gen);//2
 	}
 
