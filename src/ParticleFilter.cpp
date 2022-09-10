@@ -3,6 +3,10 @@
 #include "ParticleFilter.h"
 #include "Observation.h"
 #include "Episodes.h"
+
+#include "iostream"
+#include "string"
+#include "fstream"
 using namespace std;
 
 ParticleFilter::ParticleFilter(int num, Episodes *ep)
@@ -77,16 +81,24 @@ Action ParticleFilter::mode(Episodes *ep)
 		e->counter++;
 	}
 	int max = 0;
+	int mode_pos=0;
 	Action *mode_a;
 	for(auto &p : particles){
 		auto e = ep->At(p.pos);
 		if(e->counter > max){
 			max = e->counter;
 			mode_a = ep->actionAt(p.pos+1);
+			mode_pos = p.pos;
 		}
 		e->counter = 0;
 	}
 
+	string filename = "/home/ubuntu/catkin_ws/src/raspimouse_gamepad_teach_and_replay/src/evtime_log.txt";
+	ofstream writing_file;
+	writing_file.open(filename, ios::app);//out
+	writing_file << mode_pos << endl;
+	writing_file.close();
+	
 	Action a;
 	a.linear_x = mode_a->linear_x;
 	a.angular_z = mode_a->angular_z;
@@ -138,9 +150,9 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 	
 	//cout << "OUTPUT " << fw << " " << rot << endl;
 
-	for(auto &p : particles){
+	/*for(auto &p : particles){
 		out->particles_pos.push_back(p.pos);
-	}
+	}*/
 
 	cout << "mode" << endl;
 	return mode(ep);
