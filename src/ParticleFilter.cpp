@@ -128,8 +128,10 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 	for(auto &p : particles){
 		double h = likelihood(episodes->obsAt(p.pos),obs);
 		//double h = likelihood(episodes->obsAt(p.pos),obs, episodes->actionAt(p.pos), act);
+		out->obs_particle_pos.push_back(p.pos);//観測時点でのパーティクルの位置
+		out->lh.push_back(h);//観測により求めた尤度. float32キャスト
 		p.weight *= h;
-		out->eta += p.weight;
+		out->eta += p.weight; //意味の理解が曖昧
 	}
 /*
 	cout << "mode particle" << endl;
@@ -146,13 +148,13 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 */
 
 	normalize();
-	resampling(&particles);
+	resampling(&particles);//どうリサンプリングしているか
 	
 	//cout << "OUTPUT " << fw << " " << rot << endl;
 
-	/*for(auto &p : particles){
+	for(auto &p : particles){
 		out->particles_pos.push_back(p.pos);
-	}*/
+	}
 
 	cout << "mode" << endl;
 	return mode(ep);

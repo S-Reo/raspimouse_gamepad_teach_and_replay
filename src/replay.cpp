@@ -33,14 +33,14 @@ bool bag_read = false;
 
 const double pi = 3.141592;
 
-void pfoe_outCallback(const raspimouse_gamepad_teach_and_replay::PFoEOutput::ConstPtr& msg)
+/*void pfoe_outCallback(const raspimouse_gamepad_teach_and_replay::PFoEOutput::ConstPtr& msg)
 {
 	string filename = "/home/ubuntu/catkin_ws/src/raspimouse_gamepad_teach_and_replay/src/log_replay.txt";
 	ofstream writing_file;
 	writing_file.open(filename, ios::app);//out
-	writing_file << msg->left_side << "," << msg->left_forward << "," << msg->right_forward << "," << msg->right_side << "," << msg->linear_x << "," << msg->angular_z << endl;
+	writing_file << msg->left_side << "," << msg->left_forward << "," << msg->right_forward << "," << msg->right_side << "," << msg->linear_x << "," << msg->angular_z << "," << msg->eta << "," << msg->lh[1] << endl;
 	writing_file.close();
-}
+}*/
 void buttonCallback(const raspimouse_ros_2::ButtonValues::ConstPtr& msg)
 {
 	on = msg->mid_toggle;
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 	//Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
 	Subscriber sub = n.subscribe("/scan", 1, sensorCallback);
 	Subscriber sub_b = n.subscribe("buttons", 1, buttonCallback);
-	Subscriber sub_p = n.subscribe("pfoe_out",1,pfoe_outCallback);
+	//Subscriber sub_p = n.subscribe("pfoe_out",1,pfoe_outCallback);
 	Publisher cmdvel = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 	Publisher pfoe_out = n.advertise<raspimouse_gamepad_teach_and_replay::PFoEOutput>("pfoe_out", 100);
 	ros::ServiceClient motor_on = n.serviceClient<std_srvs::Trigger>("motor_on");
