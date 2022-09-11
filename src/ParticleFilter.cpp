@@ -116,6 +116,8 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 	for(auto &p : particles){
 		double h = likelihood(episodes->obsAt(p.pos),obs);
 		//double h = likelihood(episodes->obsAt(p.pos),obs, episodes->actionAt(p.pos), act);
+		out->obs_particle_pos.push_back(p.pos);
+		out->lh.push_back(h);
 		p.weight *= h;
 		out->eta += p.weight;
 	}

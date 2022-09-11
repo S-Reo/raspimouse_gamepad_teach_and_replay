@@ -5,4 +5,6 @@ int16 left_forward
 float32 linear_x
 float32 angular_z
 float32 eta
+uint32[] obs_particle_pos
+float32[] lh
 uint32[] particles_pos
