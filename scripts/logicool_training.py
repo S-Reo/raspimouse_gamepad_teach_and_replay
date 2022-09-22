@@ -15,7 +15,7 @@ class JoyTwist(object):
         self._btn_sub = rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
         self._twist_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 #        self._led_pub = rospy.Publisher('/leds', LedValues, queue_size=1)
-        self.level = 1
+        self.level = 2 
         self.on = False
 
     
@@ -44,8 +44,8 @@ class JoyTwist(object):
             twist.angular.z = joy_msg.axes[0] * 3.14/32 * (self.level + 15)
             self._twist_pub.publish(twist)
 
-        if joy_msg.axes[1] == joy_msg.axes[0] == 0:
-            self.level -= 1
+        #if joy_msg.axes[1] == joy_msg.axes[0] == 0:
+         #   self.level -= 1
 
 if __name__ == '__main__':
     rospy.wait_for_service('/motor_on')
