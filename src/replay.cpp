@@ -133,6 +133,8 @@ int main(int argc, char **argv)
   cout << "7" << endl;
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
+
+
 	while(ok()){
 		//cout << "wowow" << endl;
 		if(not on){
@@ -144,7 +146,9 @@ int main(int argc, char **argv)
 		}else if(not bag_read){
 			cout << "not bag_read" << endl;
 			string bagfile;
-			n.getParam("/current_bag_file", bagfile);
+			bagfile = "/home/ubuntu/.ros/20220911_180007.bag"; //ゼミ後の動画撮りのため、一時的に記述
+			//n.setParam("/current_bag_file", bagfile);
+			//n.getParam("/current_bag_file", bagfile);//20220911_180007.bag //比較的きれいな教示データ
 			readEpisodes(bagfile);
 			bag_read = true;
 			pf.init();
