@@ -146,7 +146,8 @@ int main(int argc, char **argv)
 		}else if(not bag_read){
 			cout << "not bag_read" << endl;
 			string bagfile;
-			bagfile = "/home/ubuntu/.ros/20220911_180007.bag"; //ゼミ後の動画撮りのため、一時的に記述
+			//bagfile = "/home/ubuntu/.ros/20220911_180007.bag"; //ゼミ後の動画撮りのため、一時的に記述
+			bagfile = "/home/ubuntu/catkin_ws/src/raspimouse_gamepad_teach_and_replay/log/v3.0/20220911_184708.bag";
 			//n.setParam("/current_bag_file", bagfile);
 			//n.getParam("/current_bag_file", bagfile);//20220911_180007.bag //比較的きれいな教示データ
 			readEpisodes(bagfile);
