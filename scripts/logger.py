@@ -53,10 +53,10 @@ class Logger():
 
       print(s.angle_increment)
 
-      lf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
-      rf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
-      ls = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
-      rs = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment);
+      lf = int((math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+      rf = int((-math.pi*3.0/180 - s.angle_min)/s.angle_increment); 
+      ls = int((math.pi*45.0/180 - s.angle_min)/s.angle_increment); 
+      rs = int((-math.pi*45.0/180 - s.angle_min)/s.angle_increment);
 
 
 

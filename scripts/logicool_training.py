@@ -15,7 +15,7 @@ class JoyTwist(object):
         self._btn_sub = rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
         self._twist_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 #        self._led_pub = rospy.Publisher('/leds', LedValues, queue_size=1)
-        self.level = 2 
+        self.level = 1 
         self.on = False
 
     

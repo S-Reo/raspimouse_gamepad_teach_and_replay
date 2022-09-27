@@ -148,10 +148,11 @@ int main(int argc, char **argv)
 			string bagfile;
 			//bagfile = "/home/ubuntu/.ros/20220911_180007.bag"; //ゼミ後の動画撮りのため、一時的に記述
 			//bagfile = "/home/ubuntu/catkin_ws/src/raspimouse_gamepad_teach_and_replay/log/v3.0/20220911_184708.bag";
-			bagfile = "/home/ubuntu/corridor/center/20220924_154823.bag";//廊下中央で一周
+			//bagfile = "/home/ubuntu/corridor/center/20220924_154823.bag";//廊下中央で一周
 			//bagfile = "/home/ubuntu/corridor/follow/20220924_164822.bag";//壁沿いで一周
+			//bagfile = "/home/ubuntu/.ros/20220925_175310.bag"; //狭い一周
 			//n.setParam("/current_bag_file", bagfile);
-			//n.getParam("/current_bag_file", bagfile);//20220911_180007.bag //比較的きれいな教示データ
+			n.getParam("/current_bag_file", bagfile);//20220911_180007.bag //比較的きれいな教示データ
 			readEpisodes(bagfile);
 			bag_read = true;
 			pf.init();
@@ -178,6 +179,7 @@ int main(int argc, char **argv)
 		cmdvel.publish(msg);
 		pfoe_out.publish(out);
 		pf.motionUpdate(&ep);
+
 
 		spinOnce();
 		loop_rate.sleep();
