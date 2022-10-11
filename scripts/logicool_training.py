@@ -9,6 +9,7 @@ from std_srvs.srv import Trigger, TriggerResponse
 from sensor_msgs.msg import Joy
 from raspimouse_ros_2.msg import ButtonValues, LedValues
 
+ACCEL = 0.25
 class JoyTwist(object):
     def __init__(self):
         self._joy_sub = rospy.Subscriber('/joy', Joy, self.joy_callback, queue_size=1)
@@ -17,6 +18,7 @@ class JoyTwist(object):
 #        self._led_pub = rospy.Publisher('/leds', LedValues, queue_size=1)
         self.level = 1 
         self.on = False
+        self.accel = 0
 
     
     def limitter(self, lvl):
@@ -40,9 +42,31 @@ class JoyTwist(object):
         
         if joy_msg.buttons[0] == 1:
             twist = Twist()
-            twist.linear.x = joy_msg.axes[1] * 0.2 * self.level
-            twist.angular.z = joy_msg.axes[0] * 3.14/32 * (self.level + 15)
-            self._twist_pub.publish(twist)
+            if joy_msg.axes[1] == 1 and self.accel < 1:
+                self.accel += ACCEL
+            elif joy_msg.axes[1] == -1 and self.accel > -1:
+                self.accel -= ACCEL
+
+            elif joy_msg.axes[1] == 0:
+                if self.accel >= ACCEL:
+                    self.accel -= ACCEL
+                elif self.accel <= -ACCEL:
+                    self.accel += ACCEL
+                elif -ACCEL < self.accel and self.accel < ACCEL:
+                      self.accel = 0
+    
+        elif joy_msg.buttons[0] == 0:
+            twist = Twist()
+            if self.accel >= ACCEL:
+                self.accel -= ACCEL
+            elif self.accel <= -ACCEL:
+                self.accel += ACCEL
+            elif -ACCEL < self.accel and self.accel < ACCEL:
+                self.accel = 0
+
+        twist.linear.x = self.accel * 0.2 * self.level
+        twist.angular.z = joy_msg.axes[0] * 3.14/32 * (self.level + 15)
+        self._twist_pub.publish(twist)
 
         #if joy_msg.axes[1] == joy_msg.axes[0] == 0:
          #   self.level -= 1
